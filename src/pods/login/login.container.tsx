@@ -1,31 +1,35 @@
 import React from 'react';
+import { trackPromise } from 'react-promise-tracker';
 import { useNavigate } from 'react-router-dom';
-import { SessionContext } from '#core/session-context';
-import { linkRoutes } from '#core/router';
-import * as api from './api';
+import { routes } from '#core/router';
+import { literals } from '#core/i18n';
+import { AuthContext } from '#common-app/auth';
+import { useSnackbarContext } from '#common/components';
+import { isValidLogin } from './login.api';
 import { LoginComponent } from './login.component';
 import { Login } from './login.vm';
+import { mapLoginResponseToUserSession } from './login.mapper';
 
-interface Props {
-  className?: string;
-}
-
-export const LoginContainer: React.FunctionComponent<Props> = (props) => {
-  const { className } = props;
-  const { updateLogin } = React.useContext(SessionContext);
+export const LoginContainer: React.FunctionComponent = () => {
+  const { setUserSession } = React.useContext(AuthContext);
+  const { showMessage } = useSnackbarContext();
   const navigate = useNavigate();
 
-  const handleLogin = async (login: Login) => {
-    const isValid = await api.isValidLogin(login.name, login.password);
-
+  // TODO: Pending to implement with real data
+  const loginSucceeded = (isValid: boolean): void => {
     if (isValid) {
-      updateLogin(login.name);
-      navigate(linkRoutes.hotelCollection);
+      const userSession = mapLoginResponseToUserSession();
+      userSession.userName = 'Admin';
+      setUserSession(userSession);
+      navigate(routes.submoduleList);
     } else {
-      alert(
-        'invalid credentials, use admin/test, excercise: display a mui snackbar instead of this alert.'
-      );
+      showMessage(literals.messages.errors.invalidLogin, 'error');
     }
   };
-  return <LoginComponent className={className} onLogin={handleLogin} />;
+
+  const handleLogin = (login: Login) => {
+    trackPromise(isValidLogin(login.user, login.password)).then(loginSucceeded);
+  };
+
+  return <LoginComponent onLogin={handleLogin} />;
 };

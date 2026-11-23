@@ -3,7 +3,7 @@ import { useField } from 'formik';
 import {
   FormControl,
   InputLabel,
-  Select as MuiSelect,
+  Select,
   SelectProps,
   MenuItem,
   FormHelperText,
@@ -11,12 +11,12 @@ import {
 import { Lookup } from '#common/models';
 import * as classes from './select.styles';
 
-type Props = SelectProps & {
+type Props = SelectProps<any> & {
   items: Lookup[];
   helperText?: string;
 };
 
-export const Select: React.FC<Props> = (props) => {
+export const SelectComponent: React.FunctionComponent<Props> = (props) => {
   const {
     name,
     items,
@@ -24,7 +24,6 @@ export const Select: React.FC<Props> = (props) => {
     error,
     onChange,
     onBlur,
-    value,
     className,
     ...otherProps
   } = props;
@@ -32,6 +31,7 @@ export const Select: React.FC<Props> = (props) => {
   const hasError = error || Boolean(meta && meta.touched && meta.error);
   const helperText = Boolean(field) ? meta?.error : props.helperText;
   const labelId = `${name}-label`;
+  const value = props.value !== undefined ? props.value : field?.value;
 
   return (
     <FormControl
@@ -43,29 +43,24 @@ export const Select: React.FC<Props> = (props) => {
       <InputLabel htmlFor={name} id={labelId}>
         {label}
       </InputLabel>
-      <MuiSelect
+      <Select
         {...otherProps}
         classes={{
           select: classes.select,
         }}
+        id={name}
         labelId={labelId}
-        label={label}
         name={name}
         onChange={onChange || field?.onChange}
         onBlur={onBlur || field?.onBlur}
-        value={value || field?.value}
-        slotProps={{
-          input: {
-            id: name,
-          },
-        }}
+        value={value}
       >
         {items.map((item) => (
           <MenuItem key={item.id} value={item.id}>
             {item.name}
           </MenuItem>
         ))}
-      </MuiSelect>
+      </Select>
       {hasError && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
   );

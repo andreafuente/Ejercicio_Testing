@@ -1,25 +1,30 @@
 import React from 'react';
-import { ThemeProviderComponent } from '#core/theme';
+import { StyledEngineProvider } from '@mui/material';
+import { setValidatorsMessagesToSpanish } from '#core/i18n';
 import { RouterComponent } from '#core/router';
-import { SessionProvider } from '#core/session-context';
+import { ThemeProviderComponent } from '#core/theme';
+import { AuthProvider } from '#common-app/auth';
+import {
+  SnackbarComponent,
+  SnackbarProvider,
+  SpinnerComponent,
+} from '#common/components';
 
-interface AppProvidersProps {
-  children: React.ReactNode;
-}
-const AppProviders: React.FC<AppProvidersProps> = (props) => {
-  const { children } = props;
-  return (
-    <ThemeProviderComponent>
-      <SessionProvider>{children}</SessionProvider>
-    </ThemeProviderComponent>
-  );
-};
+setValidatorsMessagesToSpanish();
 
-const App: React.FC = () => {
+const App: React.FunctionComponent = () => {
   return (
-    <AppProviders>
-      <RouterComponent />
-    </AppProviders>
+    <StyledEngineProvider injectFirst>
+      <ThemeProviderComponent>
+        <AuthProvider>
+          <SnackbarProvider>
+            <SpinnerComponent />
+            <RouterComponent />
+            <SnackbarComponent />
+          </SnackbarProvider>
+        </AuthProvider>
+      </ThemeProviderComponent>
+    </StyledEngineProvider>
   );
 };
 

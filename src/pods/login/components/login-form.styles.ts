@@ -13,3 +13,7 @@ export const root = css`
     min-width: 400px;
   }
 `;
+
+export const submit = css`
+  margin: ${theme.spacing(3, 0, 2)};
+`;

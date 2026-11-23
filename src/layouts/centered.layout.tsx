@@ -5,6 +5,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const CenteredLayout: React.FC<Props> = (props) => (
-  <div className={classes.root}>{props.children}</div>
-);
+export const CenteredLayout: React.FC<Props> = (props) => {
+  const { children } = props;
+  return <div className={classes.root}>{children}</div>;
+};

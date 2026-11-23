@@ -1,17 +1,15 @@
 import React from 'react';
-import { CardComponent, LoginFormComponent } from './components';
+import { ContainerComponent, LoginFormComponent } from './components';
 import { Login } from './login.vm';
 
 interface Props {
   onLogin: (login: Login) => void;
-  className?: string;
 }
 
-export const LoginComponent: React.FunctionComponent<Props> = (props) => {
-  const { onLogin } = props;
+export const LoginComponent: React.FunctionComponent<Props> = ({ onLogin }) => {
   return (
-    <CardComponent title="Login">
+    <ContainerComponent title="Login">
       <LoginFormComponent onLogin={onLogin} />
-    </CardComponent>
+    </ContainerComponent>
   );
 };

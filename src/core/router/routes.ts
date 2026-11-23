@@ -1,26 +1,36 @@
-import { generatePath } from 'react-router';
+import { generatePath } from 'react-router-dom';
 
-interface SwitchRoutes {
+interface BaseRoutes {
   root: string;
   login: string;
-  hotelCollection: string;
-  hotelEdit: string;
+  submoduleList: string;
+  projects: string;
+  editProject: string;
+  employees: string;
+  editEmployee: string;
 }
 
-export const switchRoutes: SwitchRoutes = {
+const baseRoutes: BaseRoutes = {
   root: '/',
   login: '/login',
-  hotelCollection: '/hotel-collection',
-  hotelEdit: '/hotel-edit/:id',
+  submoduleList: '/submodule-list',
+  projects: '/projects',
+  editProject: '/projects/:id',
+  employees: '/employees',
+  editEmployee: '/employees/:id',
 };
 
-type NavigationFunction = (id: string) => string;
-
-interface LinkRoutes extends Omit<SwitchRoutes, 'hotelEdit'> {
-  hotelEdit: NavigationFunction;
+interface Routes extends Omit<BaseRoutes, 'editProject' | 'editEmployee'> {
+  editProject: (id?: string) => string;
+  editEmployee: (id?: string) => string;
 }
 
-export const linkRoutes: LinkRoutes = {
-  ...switchRoutes,
-  hotelEdit: id => generatePath(switchRoutes.hotelEdit, { id }),
+export const routes: Routes = {
+  ...baseRoutes,
+  editProject: id =>
+    id ? generatePath(baseRoutes.editProject, { id }) : baseRoutes.editProject,
+  editEmployee: id =>
+    id
+      ? generatePath(baseRoutes.editEmployee, { id })
+      : baseRoutes.editEmployee,
 };

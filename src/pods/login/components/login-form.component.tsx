@@ -1,10 +1,11 @@
 import React from 'react';
 import { Formik, Form } from 'formik';
 import { Button } from '@mui/material';
-import { TextField } from '#common/components';
+import { TextFieldComponent } from '#common/components';
 import { Login, createEmptyLogin } from '../login.vm';
-import { formValidation } from '../login.validations';
+import { formValidation } from '../login.validation';
 import * as classes from './login-form.styles';
+import { literals } from '#core/i18n';
 
 interface Props {
   onLogin: (login: Login) => void;
@@ -20,13 +21,23 @@ export const LoginFormComponent: React.FunctionComponent<Props> = (props) => {
     >
       {() => (
         <Form className={classes.root}>
-          <TextField name="name" label="Name" />
-          <TextField
-            name="password"
-            label="Password"
-            type="password"
+          <TextFieldComponent
+            name="user"
+            label={`${literals.components.fields.user} *`}
+            variant="outlined"
           />
-          <Button type="submit" variant="contained" color="primary">
+          <TextFieldComponent
+            name="password"
+            label={`${literals.components.fields.password} *`}
+            type="password"
+            variant="outlined"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
             Login
           </Button>
         </Form>
