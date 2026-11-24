@@ -9,6 +9,9 @@ on:
     branches:
       - feature/laboratorio-testing-obligatorio
 
+permissions:
+  contents: read
+
 jobs:
   e2e:
     runs-on: ubuntu-latest
